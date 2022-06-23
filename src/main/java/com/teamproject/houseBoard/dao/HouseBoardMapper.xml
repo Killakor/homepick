@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper   
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+<mapper namespace="com.teamproject.houseBoard.dao.HouseBoardMapper">
+	<!-- 집들이 리스트 -->
+	<select id="selectHBoardList" parameterType="map" resultType="houseBoardDTO">
+		SELECT *
+		FROM (SELECT @rownum:=@rownum+1 rnum, a.*
+			  FROM (SELECT
+						b.house_num,
+						<![CDATA[
+						REPLACE(REPLACE(b.house_title,'<','&lt;'),'>','&gt;') house_title,
+						REPLACE(REPLACE(b.house_area,'<','&lt;'),'>','&gt;') house_area,
+						REPLACE(REPLACE(b.house_type,'<','&lt;'),'>','&gt;') house_type,
+						REPLACE(REPLACE(b.house_style,'<','&lt;'),'>','&gt;') house_style,
+						REPLACE(REPLACE(b.house_space,'<','&lt;'),'>','&gt;') house_space,
+						]]>
+						b.house_hits,
+						DATE_FORMAT(b.house_reg_date, '%Y-%m-%d %H:%i:%s') house_reg_date,
+						DATE_FORMAT(b.house_mod_date, '%Y-%m-%d %H:%i:%s') house_mod_date,
+						b.mem_num,
+						b.house_thumbnail,
+						b.thumbnail_filename,
+						m.nickname,
+						m.profile,
+						m.profile_filename
+					FROM house_board b JOIN mem_detail m ON b.mem_num = m.mem_num
+					<where>
+						<if test="sizeOutput != null">
+							b.house_area LIKE CONCAT('%',#{sizeOutput},'%') AND
+						</if>
+
+						<if test="residenceOutput != null">
+							b.house_type LIKE CONCAT('%',#{residenceOutput},'%') AND
+						</if>
+						
+						<if test="styleOutput != null">
+							b.house_style LIKE CONCAT('%',#{styleOutput},'%') AND
+						</if>
+						<if test="spaceOutput != null">
+							b.house_space LIKE CONCAT('%',#{spaceOutput},'%')
+						</if>
+					</where>
+					ORDER BY b.house_num DESC) a, (SELECT @ROWNUM := 0) R WHERE 1=1) list
+		<![CDATA[
+		WHERE rnum >= #{start} AND rnum <= #{end}
+		]]>
+	</select>
+	
+	<!-- 집들이 내가 쓴 게시물 리스트 -->
+	<select id="selectMyBoardList" parameterType="map" resultType="houseBoardDTO">
+		SELECT *
+		FROM (SELECT @rownum:=@rownum+1 rnum, a.*
+			  FROM (SELECT
+						b.house_num,
+						<![CDATA[
+						REPLACE(REPLACE(b.house_title,'<','&lt;'),'>','&gt;') house_title,
+						]]>
+						b.house_hits,
+						b.house_reg_date,
+						b.mem_num,
+						b.house_thumbnail,
+						b.thumbnail_filename,
+						m.nickname,
+						m.profile,
+						m.profile_filename
+			  		FROM house_board b JOIN mem_detail m ON b.mem_num = m.mem_num
+					<where>
+						b.mem_num = #{mem_num}
+					</where>
+					ORDER BY b.house_num DESC) a, (SELECT @ROWNUM := 0) R WHERE 1=1) list
+		<![CDATA[
+		WHERE rnum >= #{start} AND rnum <= #{end}
+		]]>
+	</select>
+	
+	<!-- 집들이 게시물 갯수 -->
+	<select id="selectRowCount" parameterType="map" resultType="integer">
+		SELECT
+			COUNT(*)
+		FROM house_board b JOIN mem_detail m ON b.mem_num = m.mem_num
+			<where>
+				<if test="sizeOutput != null">
+					b.house_area LIKE CONCAT('%',#{sizeOutput},'%') AND
+				</if>
+
+				<if test="residenceOutput != null">
+					b.house_type LIKE CONCAT('%',#{residenceOutput},'%') AND
+				</if>
+				
+				<if test="styleOutput != null">
+					b.house_style LIKE CONCAT('%',#{styleOutput},'%') AND
+				</if>
+				<if test="spaceOutput != null">
+					b.house_space LIKE CONCAT('%',#{spaceOutput},'%')
+				</if>
+			</where>
+	</select>
+	
+	<!-- 집들이 게시물 수정 -->
+	<update id="updateHBoard" parameterType="houseBoardDTO">
+		UPDATE house_board SET
+			<if test="thumbnail_filename != ''">
+			house_thumbnail = #{house_thumbnail},
+			thumbnail_filename = #{thumbnail_filename},
+			</if>
+			house_title = #{house_title},
+			house_area = #{house_area},
+			house_type = #{house_type},
+			house_style = #{house_style},
+			house_space = #{house_space},
+			house_content = #{house_content},
+			house_mod_date = now()
+		WHERE house_num = #{house_num}
+	</update>
+	
+	<!-- 댓글 리스트 -->
+	<select id="selectListComm" parameterType="map" resultType="hCommentDTO">
+		SELECT *
+		FROM (SELECT @rownum:=@rownum+1 rnum, a.*
+			  FROM (SELECT
+					   b.comm_num,
+					   b.comm_content,
+					   DATE_FORMAT(b.comm_reg_date, '%Y-%m-%d %H:%i:%s') comm_reg_date,
+		   			   DATE_FORMAT(b.comm_mod_date, '%Y-%m-%d %H:%i:%s') comm_mod_date,
+					   b.house_num,
+					   b.mem_num,
+					   m.nickname,
+					   m.profile
+			  		FROM comments b JOIN mem_detail m ON b.mem_num = m.mem_num
+			  		WHERE b.house_num = #{house_num}
+			  		ORDER BY b.comm_num DESC) a, (SELECT @ROWNUM := 0) R WHERE 1=1) list
+		<![CDATA[
+		WHERE rnum >= #{start} AND rnum <= #{end}
+		]]>
+	</select>
+	
+	<!-- 댓글 갯수(Map) -->
+	<select id="selectRowCountComm" parameterType="map" resultType="integer">
+		SELECT
+		   COUNT(*)
+		FROM comments b JOIN mem_detail m ON b.mem_num = m.mem_num
+		WHERE b.house_num = #{house_num}
+	</select>
+	
+	<!-- 검색 결과 리스트 출력 -->
+	<select id="selectAllSearchList" parameterType="map" resultType="houseBoardDTO">
+		SELECT *
+		FROM (SELECT @rownum:=@rownum+1 rnum, a.*
+			  FROM (SELECT
+						b.house_num,
+						<![CDATA[
+						REPLACE(REPLACE(b.house_title,'<','&lt;'),'>','&gt;') house_title,
+						REPLACE(REPLACE(b.house_area,'<','&lt;'),'>','&gt;') house_area,
+						REPLACE(REPLACE(b.house_type,'<','&lt;'),'>','&gt;') house_type,
+						REPLACE(REPLACE(b.house_style,'<','&lt;'),'>','&gt;') house_style,
+						REPLACE(REPLACE(b.house_space,'<','&lt;'),'>','&gt;') house_space,
+						]]>
+						b.house_hits,
+						DATE_FORMAT(b.house_reg_date, '%Y-%m-%d') house_reg_date,
+						b.mem_num,
+						b.house_thumbnail,
+						b.thumbnail_filename,
+						m.nickname,
+						m.profile,
+						m.profile_filename
+					FROM house_board b JOIN mem_detail m ON b.mem_num = m.mem_num
+					<where>
+					   <if test="keyword != '' and keyfield == 1">
+					      b.house_title like CONCAT('%',#{keyword},'%') OR
+					      b.house_content like CONCAT('%',#{keyword},'%') OR
+					      b.house_type like CONCAT('%',#{keyword},'%')
+					   </if>
+					</where>
+					ORDER BY b.house_num DESC) a, (SELECT @ROWNUM := 0) R WHERE 1=1) list
+		<![CDATA[
+		WHERE rnum >= #{start} AND rnum <= #{end}
+		]]>
+	</select>
+	
+	<!-- 통합 검색 시, 게시물 갯수 -->
+	<select id="selectAllSearchRowCount" parameterType="map" resultType="integer">
+		SELECT
+			COUNT(*)
+		FROM house_board b JOIN mem_detail m ON b.mem_num = m.mem_num
+		<where>
+		   <if test="keyword != '' and keyfield == 1">
+		      b.house_title like CONCAT('%',#{keyword},'%') OR
+		      b.house_content like CONCAT('%',#{keyword},'%') OR
+		      b.house_type like CONCAT('%',#{keyword},'%')
+		   </if>
+		</where>
+	</select>
+</mapper>

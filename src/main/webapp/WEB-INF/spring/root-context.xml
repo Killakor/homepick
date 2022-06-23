@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-4.3.xsd
+		http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
+		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+	
+	<!-- Root Context: defines shared resources visible to all other web components -->
+
+	<!-- 자바빈즈 자동 스캔 -->
+	<context:component-scan base-package="com.teamproject">
+		<!-- Controller 정보는 스캔 대상에서 제외
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/> -->
+	</context:component-scan>
+	
+	<!-- 자신의 PC(로컬)에 MySQL을 설치했을 경우 -->
+    <bean id="dataSource"
+        class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy"/>
+        <property name="url"
+            value="jdbc:log4jdbc:mysql://127.0.0.1:3306/homepick?allowPublicKeyRetrieval=true&amp;useSSL=false&amp;serverTimezone=UTC"/>
+        <property name="username" value="root"/>
+        <property name="password" value="m1234"/>
+    </bean>
+
+	<!-- mybatis 설정(dao 안 xml 위치할 경우) -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"/>
+		<property name="typeAliasesPackage" value="com.teamproject.member.bean,
+		                                           com.teamproject.store.bean,
+		                                           com.teamproject.houseBoard.bean,
+		                                           com.teamproject.order.bean,
+		                                           com.teamproject.serviceBoard.bean,
+		                                           com.teamproject.event.bean,
+		                                           com.teamproject.qna.bean"/>
+	</bean>
+	
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.teamproject.**.dao"/>
+	</bean>
+
+	<!-- mybatis 설정(spring/mapper 폴더 내 xml 위치할 경우)
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="mapperLocations" value="classpath:com/teamproject/mapper/*Mapper.xml"/>
+    </bean>
+    
+    <mybatis-spring:scan base-package="com.teamproject.**.dao"/>
+    
+	<context:component-scan base-package="com.teamproject.**.service"/> -->
+
+
+	<!-- JDBC 기반 트랜잭션 관리자 설정 -->
+	<bean id="transactionManager"
+	   class="org.springframework.jdbc.datasource.DataSourceTransactionManager"
+	   p:dataSource-ref="dataSource"/>
+	   
+	<!-- 애너테이션 방식 트랜잭션 처리 설정 --> 
+	<tx:annotation-driven transaction-manager="transactionManager"/>  
+
+	<!-- 이메일 전송 Gmail 계정 설정 -->
+	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl"> 
+	    <property name="host" value="smtp.gmail.com" />
+		<property name="port" value="587" />
+	 	<property name="username" value="team4.homepick@gmail.com"/> <!-- 메일발송 : 이메일 아이디 -->
+	 	<property name="password" value="homepicktest!"/> 			 <!-- 메일발송 : 비밀번호 -->
+	 	
+	 	<!-- 보안연결 TLS과 관련된 설정 -->
+	 	<property name="javaMailProperties">
+	    	<props>
+                <prop key="mail.smtp.starttls.enable">true</prop>
+                <prop key="mail.smtp.auth">true</prop>
+                <prop key="mail.transport.protocol">smtp</prop>
+                <prop key="mail.debug">true</prop>
+                <prop key="mail.smtp.ssl.trust">smtp.gmail.com</prop>
+                <prop key="mail.smtp.ssl.protocols">TLSv1.2</prop>
+            </props>
+	     </property>
+	</bean>	
+	
+</beans>

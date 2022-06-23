@@ -1,0 +1,352 @@
+@charset "UTF-8";
+
+/* 기본 레이아웃*/
+#main {
+	width: 1024px;
+	margin: 0 auto;
+	font-size: 10pt;
+	font-family: "맑은 고딕";
+}
+#main_header {
+	margin-bottom: 10px;
+	padding: 0 10px 0 0;
+}
+#main_menu {
+	float: left;
+	width: 17%;
+	min-height: 400px;
+}
+#main_body {
+	display: block;
+	margin: 0 auto;
+	width: 80%;
+	padding: 5px 5px 30px 5px;
+}
+#main_footer {
+	clear: both;
+	width: 100%;
+	background-color: yellow;
+}
+
+
+/* 상단 GNB */
+#main_menu ul {
+	list-style: none;
+}
+
+#main_menu ul li {
+	margin-bottom: 5px;
+}
+
+
+/* 메인 페이지 */
+a:link {
+	text-decoration: none;
+	color: #000;
+}
+a:visited {
+	text-decoration: none;
+	color: #000;
+}
+a:hover {
+	text-decoration: none;
+	color: #999;
+}
+
+.horizontal-area {
+	margin: 2px;
+	padding: 3px;
+	width: 200px;
+	float: left;
+	overflow: hidden;
+}
+.horizontal-area img {
+	width: 195px;
+	height: 175px;
+}
+.horizontal-area span {
+	padding: 5px;
+	margin: 5px;
+}
+
+/* 마이페이지 메뉴 */
+.page-main .mypage-div {
+	width: 48%;
+	float: left;
+	padding: 5px;
+}
+.my-photo {
+	object-fit: cover;
+	object-position: top;
+	border-radius: 50%;
+	margin-top: 5px;
+	padding-left: 10px;
+}
+.profile_btn {
+	cursor: pointer;
+	height: 80px;
+}
+.mypage-info-main {
+	border: 2px solid;
+	width: 16%;
+	height: 100%;
+	margin-top: 3em;
+	float: left;
+	padding: 10px;
+}
+.mypage-info table {
+	width: 90%;
+	height: 100px;
+	font-size: 10px;
+	border-color: #fff;
+}
+.mypage-main-content {
+	width: 70%;
+	float: left;
+	padding-top: 7em;
+	padding-left: 3em;
+}
+.mypage-photo-write-divi {
+	width: 70%;
+	padding-bottom: 12em;
+}
+.mypage-photo-write {
+	cursor: pointer;
+	vertical-align: middle;
+	height: 150px;
+}
+.myPage-menu li {
+	list-style: none;
+	display: inline-block;
+	margin-left: 50px;
+	font-size: 20px;
+	font-family: "Gowun Dodum", sans-serif;
+	text-decoration: none;
+	color: #35c5f0;
+}
+.admin-page-h2 {
+	text-align: left;
+	margin: 70px 0px 50px 130px;
+	font-family: "Gowun Dodum", sans-serif;
+}
+
+
+
+
+/* 결과 메시지 */
+.result-display {
+	width: 400px;
+	height: 200px;
+	margin: 100px auto;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.align-center {
+	text-align: center;
+}
+.align-right {
+	text-align: right;
+}
+.error-color {
+	color: #ff0000;
+	text-align: center;
+}
+
+
+/* 게시물 레이아웃 */
+.page-main {
+	width: 98%;
+	margin: 0 auto;
+}
+.page-one {
+	width: 600px;
+	margin: 0 auto;
+}
+
+/* 게시물 목록 */
+.page-main #search_form {
+	border: none;
+}
+.page-main ul.search {
+	width: 500px;
+	list-style: none;
+	padding: 0;
+	margin: 0 auto;
+}
+.page-main ul.search li {
+	margin: 0 0 9px 0;
+	padding: 0;
+	display: inline;
+}
+.page-main .list-space {
+	width: 700px;
+	margin: 10px auto;
+}
+.page-main table {
+	width: 100%;
+	margin: 5px auto;
+	border: 1px solid #000;
+	border-collapse: collapse;
+}
+.page-main table td,
+.page-main table th {
+	border: 1px solid #000;
+	padding: 5px;
+}
+
+
+/* 게시물 상세보기 */
+.page-main .detail-img {
+	max-width: 500px;
+}
+.page-main #comm_div {
+	background-color: #fff;
+}
+.page-main #output_fav, 
+.output_rfav {
+	cursor: pointer;
+}
+.page-main #output_fcount {
+	width: 50px;
+	display: inline-block;
+}
+.page-main form#comm_form {
+	width: 650px;
+	border: none;
+	float: left;
+}
+.page-main span.comm-title {
+	color: #000;
+	font-size: 12pt;
+	line-height: 200%;
+}
+.page-main span.letter-count {
+	font-size: 10pt;
+	color: #999;
+	float: left;
+}
+.page-main span.form-id {
+	padding-left: 93px;
+	color: #000;
+}
+.page-main textarea.comm-content {
+	width: 100%;
+	height: 90px;
+	margin: 5 10 5 10;
+	float: left;
+	text-align: left;
+}
+.page-main div#comm_first {
+	float: left;
+	width: 70%;
+	padding-left: 5px;
+	margin-top: 7px;
+	margin-bottom: 22px;
+}
+.page-main div#comm_second {
+	float: right;
+	width: 19%;
+}
+.page-main div#loading {
+	width: 100px;
+	margin: 0 auto;
+}
+.page-main div.paging-button {
+	text-align: right;
+}
+.page-main div#output {
+	clear: both;
+}
+.page-main form#mcomm_form {
+	border: none;
+	margin: 5px;
+}
+
+/* 게시물 등록/수정 폼 */
+.page-main form {
+	width: 500px;
+	margin: 0 auto;
+	border: 1px solid #000;
+	padding: 10px 10px 10px 30px;
+}
+
+/*CKEditor 등록/수정 폼 */
+.page-main form#register_form,
+.page-main form#update_form {
+	width: 700px;
+}
+.page-main2 form {
+	width: 700px;
+	margin: 0 auto;
+	padding: 10px 10px 10px 30px;
+}
+.page-main ul {
+	list-style: none;
+}
+.page-main label {
+	width: 130px;
+	float: left;
+}
+.page-main input[type="text"],
+.page-main input[type="password"],
+.page-main input[type="email"] {
+	width: 200px;
+}
+.page-main #register_form input[id="id"] {
+	width: 113px;
+}
+.page-main input[id="zipcode"] {
+	width: 95px;
+}
+.page-main ul.paging-button {
+	overflow: hidden;
+}
+.page-main li.paging-num {
+	float: left;
+	list-style: none;
+	padding: 10px;
+	cursor: pointer;
+}
+.page-main li.paging-current {
+	float: left;
+	list-style: none;
+	padding: 10px;
+}
+
+.emailCheckText {
+	display: none;
+}
+
+
+/* 링크 아이콘 */
+.link-icon {
+	position: relative;
+	display: inline-block;
+	width: auto;
+	font-size: 14px;
+	font-weight: 500;
+	color: #333;
+	margin-right: 10px;
+	padding-top: 50px;
+}
+.link-icon.twitter {
+	background-image: url(../images/twitter.png);
+	background-repeat: no-repeat;
+	text-decoration: none;
+}
+.link-icon.facebook {
+	background-image: url(../images/facebook.png);
+	background-repeat: no-repeat;
+	text-decoration: none;
+}
+.link-icon.kakao {
+	background-image: url(../images/kakao.png);
+	background-repeat: no-repeat;
+	text-decoration: none;
+}
+.link-icon.url {
+	background-image: url(../images/url.png);
+	background-repeat: no-repeat;
+	text-decoration: none;
+}

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper   
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+<mapper namespace="com.teamproject.order.dao.OrderMapper">  
+  	
+  	<!-- 비회원 주문 조회(비회원) -->
+  	<select id = "selectNonList" parameterType = "map" resultType = "orderDTO">
+		SELECT *
+		FROM (SELECT @rownum:=@rownum+1 rnum, a.*
+  			  FROM (SELECT
+  			  		  o.order_num,
+  			  		  o.order_date,
+  			  		  <![CDATA[
+  			  		  REPLACE(REPLACE(p.prod_name, '<', '&lt;'), '>', '&gt;') prod_name,
+  			  		  ]]>
+  			  		  o.order_address1,
+  			  		  o.order_address2,
+  			  		  o.pay_quan,
+  			  		  o.pay_price,
+  			  		  o.receiver_name,
+  			  		  o.receiver_phone,
+  			  		  p.prod_num
+  			  FROM product p JOIN orders o ON p.prod_num = o.prod_num
+  			  ORDER BY o.order_num DESC) a, (SELECT @ROWNUM := 0) R WHERE 1=1) list
+  		<![CDATA[
+  		WHERE rnum >= #{start} AND rnum <= #{end} AND receiver_phone = #{receiver_phone}
+  		]]>
+  	</select>
+  	
+  	<!-- 전화번호 데이터를 통한 주문정보 확인(비회원) -->
+  	<select id = "selectNonRowCount" parameterType = "map" resultType = "integer">
+  		SELECT
+  			COUNT(*)
+  		FROM orders o JOIN product p ON p.prod_num = o.prod_num
+  		<![CDATA[
+  		WHERE receiver_phone = #{receiver_phone}
+  		]]>
+  	</select>
+  	
+  	<!-- 주문 내역 조회(회원) -->
+  	<select id = "selectList" parameterType = "map" resultType = "orderDTO">
+		SELECT *
+		FROM (SELECT @rownum:=@rownum+1 rnum, a.*
+  			  FROM (SELECT
+  			  		  o.order_num,
+  			  		  o.order_date,
+  			  		  <![CDATA[
+  			  		  REPLACE(REPLACE(p.prod_name, '<', '&lt;'), '>', '&gt;') prod_name,
+  			  		  ]]>
+  			  		  o.order_address1,
+  			  		  o.order_address2,
+  			  		  o.pay_quan,
+  			  		  o.pay_price,
+  			  		  o.receiver_name,
+  			  		  o.receiver_phone,
+  			  		  p.prod_num
+  			  FROM product p JOIN orders o ON p.prod_num = o.prod_num
+  			  <![CDATA[
+  			  WHERE o.mem_num = #{mem_num}
+  			  ]]>
+  			  ORDER BY o.order_num DESC) a, (SELECT @ROWNUM := 0) R WHERE 1=1) list
+  		<![CDATA[
+  		WHERE rnum >= #{start} AND rnum <= #{end}
+  		]]>
+  	</select>
+  	
+  	<!-- 회원 번호 데이터를 통한 주문정보 확인(회원) -->
+  	<select id = "selectRowCount" parameterType = "map" resultType = "integer">
+  		SELECT
+  			COUNT(*)
+  		FROM orders o JOIN product p ON p.prod_num = o.prod_num
+  		<![CDATA[
+  		WHERE o.mem_num = #{mem_num}
+  		]]>
+  	</select>
+</mapper>

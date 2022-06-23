@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+       "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+
+<tiles-definitions>
+
+	<!-- 주문 하기 -->
+    <definition name="orderMain" extends="main">
+    	<put-attribute name="title" value="주문 하기"/>
+    	<put-attribute name="body" value="/WEB-INF/views/order/orderMain.jsp"/>
+    </definition>
+    
+    <!-- 주문 성공 -->
+    <definition name="orderSuccess" extends="main">
+    	<put-attribute name="title" value="주문 성공"/>
+    	<put-attribute name="body" value="/WEB-INF/views/order/orderSuccess.jsp"/>
+    </definition>
+    
+    <!-- 주문 성공 -->
+    <definition name="orderComplete" extends="main">
+    	<put-attribute name="title" value="주문 성공"/>
+    	<put-attribute name="body" value="/WEB-INF/views/order/orderComplete.jsp"/>
+    </definition>
+    
+    <!-- 비회원 주문 조회 -->
+    <definition name="nonCheck" extends="main">
+    	<put-attribute name="title" value="비회원 주문 조회"/>
+    	<put-attribute name="body" value="/WEB-INF/views/order/nonCheck.jsp"/>
+    </definition>
+    
+    <!-- 비회원 주문 조회 결과 -->
+    <definition name="orderNonCheck" extends="main">
+    	<put-attribute name="title" value="비회원 주문 조회 결과"/>
+    	<put-attribute name="body" value="/WEB-INF/views/order/orderNonCheck.jsp"/>
+    </definition>
+    
+    <!-- 나의 쇼핑 -->
+    <definition name="myOrder" extends="main">
+    	<put-attribute name="title" value="나의 쇼핑"/>
+    	<put-attribute name="body" value="/WEB-INF/views/order/myOrder.jsp"/>
+    </definition>
+</tiles-definitions>
+
+
+

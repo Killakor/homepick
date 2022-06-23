@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+       "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+
+<tiles-definitions>
+
+	<!-- 자주묻는 질문 등록하기 -->
+    <definition name="qnaInsert" extends="main">
+    	<put-attribute name="title" value="관리자 - 자주묻는 질문 등록하기"/>
+    	<put-attribute name="body" value="/WEB-INF/views/qna/qnaInsert.jsp"/>
+    </definition>
+    
+    <!-- 고객센터 리스트 -->
+    <definition name="qnaList" extends="main">
+    	<put-attribute name="title" value="고객센터"/>
+    	<put-attribute name="body" value="/WEB-INF/views/qna/qnaList.jsp"/>
+    </definition>
+    
+    <!-- 자주묻는 질문 리스트 -->
+    <definition name="qnaServiceList" extends="main">
+    	<put-attribute name="title" value="관리자 - 자주묻는 질문 목록"/>
+    	<put-attribute name="body" value="/WEB-INF/views/qna/qnaServiceList.jsp"/>
+    </definition>
+    
+    <!-- 자주묻는 질문 수정하기 -->
+    <definition name="qnaUpdate" extends="main">
+    	<put-attribute name="title" value="관리자 - 자주묻는 질문 수정하기"/>
+    	<put-attribute name="body" value="/WEB-INF/views/qna/qnaUpdate.jsp"/>
+    </definition>
+    
+</tiles-definitions>
+
+

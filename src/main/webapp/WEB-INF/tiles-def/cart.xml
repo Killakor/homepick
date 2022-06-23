@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+       "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+
+<tiles-definitions>
+
+	<!-- 장바구니 리스트 -->
+	<definition name="cartList" extends="main">
+    	<put-attribute name="title" value="장바구니 목록"/>
+    	<put-attribute name="body" value="/WEB-INF/views/cart/cartList.jsp"/>
+    </definition>
+    
+    <!-- 장바구니 주문 폼 -->
+    <definition name="cartOrderForm" extends="main">
+    	<put-attribute name="title" value="장바구니 주문하기"/>
+    	<put-attribute name="body" value="/WEB-INF/views/cart/cartOrderForm.jsp"/>
+    </definition>
+    
+</tiles-definitions>

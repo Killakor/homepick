@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans
+	xmlns="http://www.springframework.org/schema/mvc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- DispatcherServlet Context: defines this servlet's request-processing 
+		infrastructure -->
+
+	<!-- Enables the Spring MVC @Controller programming model -->
+	<annotation-driven />
+
+	<!-- Handles HTTP GET requests for /resources/** by efficiently serving 
+		up static resources in the ${webappRoot}/resources directory -->
+		
+	<!-- /resources/ 하위 경로 읽기 -->
+	<resources mapping="/resources/**" location="/resources/" />
+	
+	
+	<!-- 컴포넌트 스캔 & 의존관계 자동주입 시작 -->
+	<!-- 백앤드 -->
+	<context:component-scan base-package="com.teamproject.teamproject"/>
+	<context:component-scan base-package="com.teamproject.**.bean"/>
+	<context:component-scan base-package="com.teamproject.**.controller"/>
+	<context:component-scan base-package="com.teamproject.**.dao"/>
+	<context:component-scan base-package="com.teamproject.interceptor"/>
+	<context:component-scan base-package="com.project.view"/>
+	<context:component-scan base-package="com.project.util"/>
+	
+	<!-- 프론트앤드 -->
+	<context:component-scan base-package="cart"/>
+	<context:component-scan base-package="common"/>
+	<context:component-scan base-package="event"/>
+	<context:component-scan base-package="houseBoard"/>
+	<context:component-scan base-package="main"/>
+	<context:component-scan base-package="mainSearch"/>
+	<context:component-scan base-package="member"/>
+	<context:component-scan base-package="notice"/>
+	<context:component-scan base-package="order"/>
+	<context:component-scan base-package="qna"/>
+	<context:component-scan base-package="review"/>
+	<context:component-scan base-package="store"/>
+	<context:component-scan base-package="template"/>
+
+	<!-- Resolves views selected for rendering by @Controllers to .jsp resources 
+		in the /WEB-INF/views directory -->
+
+
+
+	<!-- 스프링빈 등록 -->
+	<!-- 팝업창과 같이 tiles를 이용하지 않고 JSP를 호출해야 하는 경우 : /WEB-INF/views/ 경우 JSP 호출 -->
+	<beans:bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<beans:property name="prefix" value="/WEB-INF/views/"/>
+		<beans:property name="suffix" value=".jsp"/>
+		<beans:property name="order" value="2"/>
+	</beans:bean>
+
+
+	<!-- BLOB 이미지 표시 -->
+	<beans:bean id="imageView" class="com.teamproject.view.ImageView"/>
+
+
+	<!-- 파일 다운로드 -->
+	<beans:bean class="org.springframework.web.servlet.view.BeanNameViewResolver" p:order="0" />
+	<beans:bean id="downloadView" class="com.teamproject.view.DownloadView"/>
+		
+		
+	<!-- 파일 업로드(50MB) -->
+	<beans:bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<beans:property name="maxUploadSize" value="52428800"/>
+		<beans:property name="defaultEncoding" value="UTF-8"/>
+	</beans:bean>
+
+
+	<!-- 메시지 유효성 검사 : messageSource -->
+	<beans:bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+		<beans:property name="basenames">
+			<beans:list>
+				<beans:value>messages.validation</beans:value>
+			</beans:list>
+		</beans:property>
+	</beans:bean>
+
+
+	<!-- tiles 설정 -->
+	<beans:bean id="tilesViewResolver" class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+	    <beans:property name="viewClass" value="org.springframework.web.servlet.view.tiles3.TilesView"/>
+	    <beans:property name="order" value="1"/>
+	</beans:bean>
+	
+	<beans:bean id="tilesConfigurer"
+		class="org.springframework.web.servlet.view.tiles3.TilesConfigurer">
+		<beans:property name="definitions">
+			<beans:list>
+				<beans:value>/WEB-INF/tiles-def/main.xml</beans:value>
+				<beans:value>/WEB-INF/tiles-def/member.xml</beans:value>
+				<beans:value>/WEB-INF/tiles-def/store.xml</beans:value>
+				<beans:value>/WEB-INF/tiles-def/houseBoard.xml</beans:value>
+				<beans:value>/WEB-INF/tiles-def/serviceBoard.xml</beans:value>
+				<beans:value>/WEB-INF/tiles-def/notice.xml</beans:value>
+				<beans:value>/WEB-INF/tiles-def/qna.xml</beans:value>
+				<beans:value>/WEB-INF/tiles-def/event.xml</beans:value>
+				<beans:value>/WEB-INF/tiles-def/cart.xml</beans:value>
+				<beans:value>/WEB-INF/tiles-def/order.xml</beans:value>
+				<beans:value>/WEB-INF/tiles-def/review.xml</beans:value>
+				<beans:value>/WEB-INF/tiles-def/mainSearch.xml</beans:value>
+			</beans:list>
+		</beans:property>
+	</beans:bean>
+
+
+	<!-- interceptors 설정 -->
+	<interceptors>
+		<!-- 로그인 여부 체크 -->
+		<interceptor>
+			<mapping path="/member/myPage.do"/>
+			<mapping path="/member/memberUpdate.do"/>
+			<mapping path="/member/memberPasswdUpdate.do"/>
+			<mapping path="/member/memberDelete.do"/>
+			<mapping path="/member/myBoard.do"/>
+			<mapping path="/member/myScrap.do"/>
+			<mapping path="/member/myRecomm.do"/>
+			<mapping path="/member/myCoupon.do"/>
+			<mapping path="/houseBoard/write.do"/>
+			<mapping path="/houseBoard/update.do"/>
+			<mapping path="/houseBoard/delete.do"/>
+			<mapping path="/qna/qnaUpdate.do"/>
+			<mapping path="/qna/qnaDelete.do"/>
+			<mapping path="/qna/serviceBoardList.do"/>
+			<mapping path="/cart/cartList.do"/>
+			<mapping path="/cart/cartInsert.do"/>
+			<mapping path="/review/myBuyList.do"/>
+			<beans:bean class="com.teamproject.interceptor.LoginCheckInterceptor"/>
+				
+		</interceptor>
+
+		<!-- 로그인한 회원의 회원번호와 작성자 회원번호 일치 여부 체크 -->
+		<interceptor>
+			<mapping path="/houseBoard/update.do"/>
+			<mapping path="/houseBoard/delete.do"/>
+			<mapping path="/review/reviewUpdate.do"/>
+			<beans:bean class="com.teamproject.interceptor.WriterCheckInterceptor"/>
+		</interceptor>
+
+		<!-- 상품 수정 시 로그인 된 회원정보 체크 -->
+		<interceptor>
+			<mapping path="/store/storeModify.do"/>
+			<beans:bean class="com.teamproject.interceptor.ProductRegisterCheckInterceptor"/>
+		</interceptor>
+
+		<!-- 판매자 맞는지 체크 -->
+		<interceptor>
+			<mapping path="/store/storeRegister.do"/>
+			<beans:bean
+				class="com.teamproject.interceptor.SellerCheckInterceptor"/>
+		</interceptor>
+
+		<!-- 판매자 && 관리자 맞는지 체크 -->
+		<interceptor>
+			<mapping path="/store/productDelete.do"/>
+			<beans:bean
+				class="com.teamproject.interceptor.AdminAndSellerCheckInterceptor"/>
+		</interceptor>
+
+		<!-- 관리자 여부 체크 -->
+		<interceptor>
+			<mapping path="/notice/noticeWrite.do"/>
+			<mapping path="/notice/noticeUpdate.do"/>
+			<mapping path="/notice/noticeDelete.do"/>
+			<mapping path="/member/memberList.do"/>
+			<mapping path="/member/sellerApplyList.do"/>
+			<mapping path="/qna/qnaInsert.do"/>
+			<mapping path="/qna/serviceBoardList.do"/>
+			<mapping path="/qna/qnaServiceList.do"/>
+			<mapping path="/qna/qnaUpdate.do"/>
+			<mapping path="/qna/qnaDelete.do"/>
+			<mapping path="/qna/serviceBoardList.do"/>
+			<mapping path="/event/eventUpdate.do"/>
+			<mapping path="/event/eventDelete.do"/>
+			<mapping path="/event/eventWrite.do"/>
+			<beans:bean class="com.teamproject.interceptor.AdminCheckInterceptor"/>
+		</interceptor>
+	</interceptors>
+
+</beans:beans>

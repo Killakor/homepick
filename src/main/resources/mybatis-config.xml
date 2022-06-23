@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration 
+    PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration> 	
+	<!-- 클래스 별명 -->	
+ 	<typeAliases>
+        <typeAlias type="com.teamproject.cart.bean.CartDTO" alias="cartDTO"/>
+        <typeAlias type="com.teamproject.event.bean.ECommentDTO" alias="eCommentDTO"/>
+        <typeAlias type="com.teamproject.event.bean.EventDTO" alias="eventDTO"/>
+        <typeAlias type="com.teamproject.houseBoard.bean.HCommentDTO" alias="hCommentDTO"/>
+        <typeAlias type="com.teamproject.houseBoard.bean.HMarkDTO" alias="hMarkDTO"/>
+        <typeAlias type="com.teamproject.houseBoard.bean.HouseBoardDTO" alias="houseBoardDTO"/>
+        <typeAlias type="com.teamproject.member.bean.MemberBuisDTO" alias="memberBuisDTO"/>
+        <typeAlias type="com.teamproject.member.bean.MemberDTO" alias="memberDTO"/>
+        <typeAlias type="com.teamproject.notice.bean.NoticeDTO" alias="noticeDTO"/>
+        <typeAlias type="com.teamproject.order.bean.OrderDTO" alias="orderDTO"/>
+        <typeAlias type="com.teamproject.qna.bean.QnaDTO" alias="qnaDTO"/>
+        <typeAlias type="com.teamproject.review.bean.ReviewDTO" alias="reviewDTO"/>
+        <typeAlias type="com.teamproject.serviceBoard.bean.ServiceBoardDTO" alias="serviceBoardDTO"/>
+        <typeAlias type="com.teamproject.store.bean.StoreDTO" alias="storeDTO"/>
+    </typeAliases>
+        
+    <!-- SQL Mapper 설정 -->
+	<mappers>
+		<mapper resource="mappers/eventMapper.xml"/>
+		<mapper resource="mappers/houseBoardMapper.xml"/>
+		<mapper resource="mappers/memberMapper.xml"/>
+		<mapper resource="mappers/noticeMapper.xml"/>
+		<mapper resource="mappers/orderMapper.xml"/>
+		<mapper resource="mappers/qnaMapper.xml"/>
+		<mapper resource="mappers/serviceBoardMapper.xml"/>
+		<mapper resource="mappers/storeMapper.xml"/>
+	</mappers>
+</configuration>

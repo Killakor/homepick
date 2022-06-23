@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper   
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+<mapper namespace="com.teamproject.store.dao.StoreMapper">  
+	<!-- 상품 리스트 -->
+  	<select id = "selectList" parameterType = "map" resultType = "storeDTO">
+		SELECT *
+		FROM (SELECT @rownum:=@rownum+1 rnum, a.*
+  			  FROM (SELECT
+  			  		  p.prod_num,
+  			  		  <![CDATA[
+  			  		  REPLACE(REPLACE(p.prod_name, '<', '&lt;'), '>', '&gt;') prod_name,
+  			  		  ]]>
+  			  		  p.thumbnail_filename,
+  			  		  p.thumbnail_img,
+  			  		  p.prod_price,
+  			  		  p.prod_keyword,
+  			  		  p.prod_cate,
+                      d.buis_name,
+                      m.mem_auth
+  			  FROM product p JOIN member m ON p.mem_num = m.mem_num JOIN buis_detail d ON d.mem_num = m.mem_num
+  			  <where>
+			  	<if test = "keyword != '' and keyfield == 1">
+			  		p.prod_cate LIKE CONCAT('%',#{keyword},'%')
+			  	</if> 
+  			  </where>
+  			  ORDER BY p.prod_num DESC) a, (SELECT @ROWNUM := 0) R WHERE 1=1) list
+  		<![CDATA[
+  		WHERE rnum >= #{start} AND rnum <= #{end}
+  		]]>
+  	</select>
+  	
+  	<!-- 상품 갯수 -->
+  	<select id = "selectRowCount" parameterType = "map" resultType = "integer">
+  		SELECT
+  			COUNT(*)
+  		FROM product p JOIN member m ON p.mem_num = m.mem_num
+		<where>
+	  		<if test = "keyword != '' and keyfield == 1">
+	  	  		p.prod_cate LIKE CONCAT('%',#{keyword},'%')
+	  	 	</if> 
+		</where>
+  	</select>
+  	
+  	<!-- 상품 수정 -->
+  	<update id = "updateProduct" parameterType = "storeDTO">
+  		UPDATE product SET 
+  			prod_name = #{prod_name}, 
+  			prod_price = #{prod_price}, 
+  			delive_price = #{delive_price},
+			delive_type = #{delive_type}, 
+			selec_product = #{selec_product}, 
+			prod_option1 = #{prod_option1}, 
+            prod_option2 = #{prod_option2}, 
+            prod_option3 = #{prod_option3}, 
+            prod_option4 = #{prod_option4}, 
+            prod_option5 = #{prod_option5}, 
+            prod_option6 = #{prod_option6}, 
+            prod_option7 = #{prod_option7}, 
+            prod_option8 = #{prod_option8}, 
+            prod_option9 = #{prod_option9}, 
+            prod_option10 = #{prod_option10}, 
+            prod_content = #{prod_content}, 
+            <if test = "thumbnail_filename != ''"> 
+	            thumbnail_img = #{thumbnail_img}, 
+	            thumbnail_filename = #{thumbnail_filename}, 
+            </if>
+            prod_quan = #{prod_quan}, 
+            prod_keyword = #{prod_keyword}, 
+            prod_cate = #{prod_cate}
+         WHERE prod_num = #{prod_num}
+  	</update>
+  	
+  	<!-- 통합검색 결과 조회되는 상품 리스트 -->
+  	<select id="selectStoreAllSearchList" parameterType="map" resultType="storeDTO">
+		SELECT *
+		FROM (SELECT @rownum:=@rownum+1 rnum, a.*
+  			  FROM (SELECT
+  			  		  prod_num,
+  			  		  <![CDATA[
+  			  		  REPLACE(REPLACE(prod_name, '<', '&lt;'), '>', '&gt;') prod_name,
+  			  		  ]]>
+  			  		  thumbnail_filename,
+  			  		  thumbnail_img,
+  			  		  prod_price,
+  			  		  prod_keyword,
+  			  		  prod_cate
+  			  FROM product
+  			  <where>
+			  	  	<if test = "keyword != '' and keyfield == 1">
+			  			prod_name LIKE CONCAT('%',#{keyword},'%') OR
+			  			prod_content LIKE CONCAT('%',#{keyword},'%') OR
+			  			prod_keyword LIKE CONCAT('%',#{keyword},'%') OR
+			  			prod_cate LIKE CONCAT('%',#{keyword},'%')
+			  		</if>
+  			  </where>
+  			  ORDER BY prod_num DESC) a, (SELECT @ROWNUM := 0) R WHERE 1=1) list
+  		<![CDATA[
+  		WHERE rnum >= #{start} AND rnum <= #{end}
+  		]]>
+	</select>
+	
+	<!-- 통합검색 결과 조회되는 상품 갯수 -->
+	<select id="selectStoreAllSearchRowCount" parameterType="map" resultType="integer">
+		SELECT
+  			COUNT(*)
+  		FROM product
+  		<where>
+	  		<if test = "keyword != '' and keyfield == 1">
+	  			prod_name LIKE CONCAT('%',#{keyword},'%') OR 
+	  			prod_content LIKE CONCAT('%',#{keyword},'%') OR
+	  			prod_keyword LIKE CONCAT('%',#{keyword},'%') OR
+	  			prod_cate LIKE CONCAT('%',#{keyword},'%')
+	  		</if>
+		</where>
+  	</select>
+</mapper>

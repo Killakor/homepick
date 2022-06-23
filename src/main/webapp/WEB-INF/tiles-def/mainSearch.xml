@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+       "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+
+<tiles-definitions>
+
+	<!-- 통합 검색 결과 -->
+    <definition name="mainSearch" extends="main">
+    	<put-attribute name="title" value="인테리어의 모든 것! 홈픽 - 통합 검색"/>
+    	<put-attribute name="body" value="/WEB-INF/views/mainSearch/mainAllSearchView.jsp"/>
+    </definition>
+</tiles-definitions>
+
+
+

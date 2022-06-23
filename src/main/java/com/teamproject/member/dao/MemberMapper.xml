@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.teamproject.member.dao.MemberMapper">
+
+	<!-- 전체 회원 리스트 -->
+	<select id="selectMemberList" parameterType="map" resultType="memberDTO">
+		SELECT * 
+		FROM (SELECT @rownum:=@rownum+1 rnum, a.*
+	         FROM (SELECT 
+		         		m.mem_num, 
+	         			m.mem_id, 
+	         			m.mem_auth, 
+	         			d.mem_name, 
+	         			d.passwd, 
+	         			d.nickname, 
+	         			d.email, 
+	         			d.phone, 
+	         			d.zipcode, 
+	         			d.address1, 
+	         			d.address2, 
+	         			d.reg_date, 
+	         			d.profile, 
+	         			d.profile_filename, 
+	         			d.point
+	               FROM member m LEFT JOIN mem_detail d ON m.mem_num = d.mem_num
+	  			  <where>
+				  	  <if test = "keyword != '' and keyfield == 1">
+				  	  	  m.mem_id LIKE CONCAT('%',#{keyword},'%')
+				  	  </if> 
+				  	  <if test = "keyword != '' and keyfield == 2">
+				  	  	  d.mem_name LIKE CONCAT('%',#{keyword},'%')
+				  	  </if> 
+	  			  </where>
+	               ORDER BY m.mem_num DESC) a, (SELECT @ROWNUM := 0) R WHERE 1=1) list
+  		<![CDATA[
+  		WHERE rnum >= #{start} AND rnum <= #{end}
+  		]]>
+	</select>
+	
+	<!-- 전체 회원 수 -->
+	<select id="selectMemberCount" parameterType="map" resultType="Integer">
+		SELECT 
+		 count(*) 
+		FROM member m JOIN mem_detail d ON m.mem_num=d.mem_num
+		 <where>
+            <if test="keyword != '' and keyfield == 1">
+               m.mem_id LIKE CONCAT('%',#{keyword},'%')
+            </if>
+            <if test="keyword != '' and keyfield == 2">
+               d.mem_name LIKE CONCAT('%',#{keyword},'%')
+            </if>
+         </where>
+	</select>
+	
+	<!-- 판매자 신청 리스트 -->
+	<select id="selectMemberBuisList" parameterType="map" resultType="memberBuisDTO">
+		SELECT 
+		*
+		FROM(SELECT @rownum:=@rownum+1 rnum, a.* 
+		     FROM (SELECT 
+		     			d.BUIS_COUNT,
+                        d.BUIS_NUM,
+                        d.MEM_NUM,
+                        d.CEO_NAME,
+                        d.BUIS_NAME,
+                        DATE_FORMAT(d.OPENING_DATE,'%Y-%m-%d') OPENING_DATE,
+                        d.BUIS_ITEM,
+                        d.BUIS_ZIPCODE,
+                        d.BUIS_ADDRESS1,
+                        d.BUIS_ADDRESS2,
+                        d.APPLICATION_STATE,                
+                        m.mem_id,
+                        m.mem_auth
+		           FROM buis_detail d JOIN member m ON d.mem_num=m.mem_num
+		           <where>
+                   <if test="keyword != '' and keyfield == 1">
+                      d.buis_name LIKE CONCAT('%',#{keyword},'%')
+                   </if>
+                   <if test="keyword != '' and keyfield == 2">
+                      d.ceo_name LIKE CONCAT('%',#{keyword},'%')
+                   </if>
+                   	  AND application_state = 1
+                	</where>
+		           ORDER BY d.buis_count) a, (SELECT @ROWNUM := 0) R WHERE 1=1) list
+		<![CDATA[
+		WHERE rnum >= #{start} AND rnum <= #{end}
+		]]>
+	</select>
+	
+	<!-- 판매자 신청 수 -->
+	<select id="selectMemberBuisCount" parameterType="map" resultType="Integer">
+		SELECT
+		 COUNT(*) 
+		FROM buis_detail d JOIN member m ON d.mem_num=m.mem_num
+		<where>
+	         <if test="keyword != '' and keyfield == 1">
+	            d.buis_name LIKE CONCAT('%',#{keyword},'%')
+	         </if>
+	         <if test="keyword != '' and keyfield == 2">
+	            d.ceo_name LIKE CONCAT('%',#{keyword},'%')
+	         </if>
+	         	AND application_state = 1
+        </where>
+	</select>
+	
+	<!-- 회원의 추천 게시글 번호 리스트 -->
+	<select id="myRecommBoardNum" parameterType="map" resultType="houseBoardDTO">
+		SELECT * FROM (SELECT @rownum:=@rownum+1 rnum, a.* 
+                 FROM (SELECT 
+                        house_num
+                        FROM recommend 
+                        WHERE mem_num=#{mem_num}
+                        ORDER BY house_num DESC) a, (SELECT @ROWNUM := 0) R WHERE 1=1) list
+		<![CDATA[
+		WHERE rnum >= #{start} AND rnum <= #{end}
+		]]>
+	</select>
+	
+	<!-- 회원이 추천한 게시글의 갯수 -->
+	<select id="myRecommBoardCount" parameterType="map" resultType="Integer">	
+		SELECT count(*) FROM (SELECT @rownum:=@rownum+1 rnum, a.*
+	                FROM (SELECT 
+	                        house_num
+	                        FROM recommend
+	                        WHERE mem_num=#{mem_num}
+	                        ORDER BY house_num DESC) a, (SELECT @ROWNUM := 0) R WHERE 1=1) list
+	</select>
+	
+	<!-- 회원이 추천 및 스크랩한 게시글 리스트 -->
+	<select id="myRecommScrapBoardList" parameterType="map" resultType="houseBoardDTO">
+		SELECT * 
+		FROM (SELECT @rownum:=@rownum+1 rnum, a.* 
+		        FROM (SELECT
+		                   b.house_num, 
+		                   b.house_title, 
+		                   b.house_hits,
+		                   b.house_reg_date,
+		                   b.mem_num,
+		                   b.thumbnail_filename,
+		                   b.house_thumbnail,
+		                   m.nickname,
+		                   m.profile_filename,
+                  		   m.profile
+		                 FROM house_board b JOIN mem_detail m ON b.mem_num = m.mem_num
+		        WHERE b.house_num = #{house_num}
+		        ORDER BY b.house_num DESC) a, (SELECT @ROWNUM := 0) R WHERE 1=1) list
+	</select>
+	
+	<!-- 회원이 스크랩한 게시글의 번호 리스트 -->
+	<select id="myScrapBooksNum" parameterType="map" resultType="houseBoardDTO">
+		
+		SELECT * FROM (SELECT @rownum:=@rownum+1 rnum, a.*
+                FROM (SELECT 
+                        house_num
+                        FROM scrapbook
+                        WHERE mem_num=#{mem_num}
+                        ORDER BY house_num DESC) a, (SELECT @ROWNUM := 0) R WHERE 1=1) list
+        <![CDATA[
+		WHERE rnum >= #{start} AND rnum <= #{end}
+		]]>
+	</select>
+	
+	<!-- 회원이 스크랩한 게시글의 갯수 -->
+	<select id="myScrapBookBoardCounts" parameterType="map" resultType="Integer">
+		SELECT count(*) FROM (SELECT @rownum:=@rownum+1 rnum, a.*
+	                FROM (SELECT 
+	                        house_num
+	                        FROM scrapbook
+	                        WHERE mem_num=#{mem_num}
+	                        ORDER BY house_num DESC) a, (SELECT @ROWNUM := 0) R WHERE 1=1) list
+	</select>
+	
+	
+	<!-- 판매자가 등록한 상품 리스트 -->
+	<select id="myProductList" parameterType="map" resultType="storeDTO">
+		
+		SELECT *
+  		FROM (SELECT @rownum:=@rownum+1 rnum, a.* 
+  			  FROM (SELECT
+  			  		  p.prod_num,
+  			  		  <![CDATA[
+  			  		  REPLACE(REPLACE(p.prod_name, '<', '&lt;'), '>', '&gt;') prod_name,
+  			  		  ]]>
+  			  		  p.thumbnail_filename,
+  			  		  p.thumbnail_img,
+  			  		  p.prod_price,
+  			  		  p.prod_keyword,
+  			  		  p.prod_cate,
+                      d.buis_name,
+                      d.mem_num
+  			  FROM product p JOIN member m ON p.mem_num = m.mem_num JOIN buis_detail d ON d.mem_num = m.mem_num
+			  WHERE	p.prod_name LIKE '%%'
+              AND d.mem_num = #{mem_num}
+  			  ORDER BY p.prod_num DESC) a, (SELECT @ROWNUM := 0) R WHERE 1=1) list
+  		<![CDATA[
+		WHERE rnum >= #{start} AND rnum <= #{end}
+		]]>
+	</select>
+	
+	<!-- 쿠폰 리스트 -->
+	<select id="selectCouponAllList" parameterType="map" resultType="memberDTO">
+	 	SELECT *
+	 	FROM (SELECT @rownum:=@rownum+1 rnum, a.* 
+	 		  FROM (SELECT
+	 		  		coupondetail_num,
+                    coupon_name,
+                    coupon_content,
+                    discount_price
+                    FROM coupon_detail
+                    ORDER BY coupondetail_num DESC) a, (SELECT @ROWNUM := 0) R WHERE 1=1) list
+        <![CDATA[
+		WHERE rnum >= #{start} AND rnum <= #{end}
+		]]>
+	</select>
+	
+	<!-- 회원이 보유한 쿠폰 갯수 -->
+	<select id="selectGetCouponList" parameterType="map" resultType="memberDTO">
+	 	SELECT *
+	 	FROM (SELECT @rownum:=@rownum+1 rnum, a.* 
+	 		  FROM (SELECT
+	 		  		cd.coupondetail_num,
+                    cd.coupon_name,
+                    cd.coupon_content,
+                    cd.discount_price,
+                    c.coupon_num,
+                    c.mem_num
+                    FROM coupon_detail cd JOIN coupon c ON cd.coupondetail_num = c.coupondetail_num
+                    WHERE c.mem_num = #{mem_num}
+                    ORDER BY coupondetail_num DESC) a, (SELECT @ROWNUM := 0) R WHERE 1=1) list
+        <![CDATA[
+		WHERE rnum >= #{start} AND rnum <= #{end}
+		]]>
+	</select>
+</mapper>

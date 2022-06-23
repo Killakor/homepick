@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+       "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+
+<tiles-definitions>
+
+	<!-- 집들이 게시판 등록 -->
+	<definition name="houseBoardWrite" extends="main">
+    	<put-attribute name="title" value="집들이 게시판 등록하기"/>
+    	<put-attribute name="body" value="/WEB-INF/views/houseBoard/houseBoardWrite.jsp"/>
+    </definition>
+    
+    <!-- 집들이 게시판 수정 -->
+    <definition name="houseBoardModify" extends="main">
+    	<put-attribute name="title" value="집들이 게시판 글 수정하기"/>
+    	<put-attribute name="body" value="/WEB-INF/views/houseBoard/houseBoardModify.jsp"/>
+    </definition>
+
+	<!-- 집들이 게시판 리스트 -->
+	<definition name="houseBoardList" extends="main">
+    	<put-attribute name="title" value="집들이 게시판 글 목록"/>
+    	<put-attribute name="body" value="/WEB-INF/views/houseBoard/houseBoardList.jsp"/>
+    </definition>
+
+	<!-- 집들이 게시판 상세보기 -->
+    <definition name="houseBoardDetail" extends="main">
+    	<put-attribute name="title" value="집들이 게시판 글 상세보기"/>
+    	<put-attribute name="body" value="/WEB-INF/views/houseBoard/houseBoardDetail.jsp"/>
+    </definition>
+    
+</tiles-definitions>
