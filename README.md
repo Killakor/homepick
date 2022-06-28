@@ -79,7 +79,7 @@
 
 - **스토어 > 상품 상세보기 :** 상품 데이터 호출 및 옵션값과 수량 선택 후 장바구니 및 구매 가능
 
-![홈픽5](https://user-images.githubusercontent.com/85205124/176145817-9343925c-1b4f-4e5c-95e0-7061145cd92f.png)
+![홈픽5](https://user-images.githubusercontent.com/85205124/176159250-235fee48-63b1-447b-a531-07cd318597e0.png)
 
 - **주문 결제 :** 주문자 정보, 배송지 정보 입력란 및 상품 정보 호출 및 결제 가능
 
